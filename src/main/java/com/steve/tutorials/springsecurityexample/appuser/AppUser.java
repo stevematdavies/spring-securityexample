@@ -19,43 +19,40 @@ import java.util.Collections;
 @Entity
 public class AppUser implements UserDetails {
 
-     @Id
-     @SequenceGenerator(
-             name = "app_user_sequence",
-             sequenceName = "app_user_sequence",
-             allocationSize = 1
-     )
-     @GeneratedValue(
-             strategy = GenerationType.SEQUENCE,
-             generator = "app_user_sequence"
-     )
-     private Long id;
-     private String name;
-     private String username;
-     private String email;
-     private String password;
+    @Id
+    @SequenceGenerator(
+            name = "app_user_sequence",
+            sequenceName = "app_user_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "app_user_sequence"
+    )
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String password;
 
-     @Enumerated(EnumType.STRING)
-     private AppUserRole appUserRole;
-     private Boolean isAccountLocked;
-     private Boolean isAccountEnabled;
+    @Enumerated(EnumType.STRING)
+    private AppUserRole appUserRole;
+    private Boolean isAccountLocked = false;
+    private Boolean isAccountEnabled = false;
 
 
-    public AppUser(String name,
-                   String username,
+    public AppUser(String firstName,
+                   String lastName,
                    String email,
                    String password,
-                   AppUserRole appUserRole,
-                   Boolean isAccountLocked,
-                   Boolean isAccountEnabled) {
-        this.name = name;
-        this.username = username;
+                   AppUserRole appUserRole) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.appUserRole = appUserRole;
-        this.isAccountLocked = isAccountLocked;
-        this.isAccountEnabled = isAccountEnabled;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,33 +61,41 @@ public class AppUser implements UserDetails {
         );
     }
 
-    @Override
-    public String getPassword(){
-         return password;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     @Override
-    public String getUsername(){
+    public String getPassword() {
         return password;
     }
 
     @Override
-    public boolean isAccountNonExpired(){
+    public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked(){
+    public boolean isAccountNonLocked() {
         return !isAccountLocked;
     }
 
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return isAccountEnabled;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 }

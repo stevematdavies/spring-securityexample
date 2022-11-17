@@ -1,4 +1,4 @@
-package com.steve.tutorials.springsecurityexample.utils;
+package com.steve.tutorials.springsecurityexample.utils.validators;
 
 import org.springframework.stereotype.Service;
 
