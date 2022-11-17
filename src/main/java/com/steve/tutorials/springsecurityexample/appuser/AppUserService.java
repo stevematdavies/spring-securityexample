@@ -3,11 +3,14 @@ package com.steve.tutorials.springsecurityexample.appuser;
 import com.steve.tutorials.springsecurityexample.registration.token.ConfirmationToken;
 import com.steve.tutorials.springsecurityexample.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -52,5 +55,12 @@ public class AppUserService implements UserDetailsService {
         // TODO send an email;
 
         return confirmationToken.getToken();
+    }
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE AppUser a SET a.isAccountEnabled = TRUE WHERE a.email = ?1")
+    public int enableAppUser(String email) {
+        return userRepository.enableAppUser(email);
     }
 }
