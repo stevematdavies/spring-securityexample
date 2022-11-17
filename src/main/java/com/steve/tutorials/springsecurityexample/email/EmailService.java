@@ -19,12 +19,6 @@ public class EmailService implements IEmailSender {
     private final static Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender mailSender;
 
-
-    private void logErrorMessage(String message){
-
-
-    }
-
     @Override
     @Async
     public void send(String to, String email) throws IllegalStateException{
