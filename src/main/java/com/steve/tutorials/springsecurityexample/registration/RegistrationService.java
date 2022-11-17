@@ -20,6 +20,7 @@ public class RegistrationService {
 
     private final EmailValidatorService emailValidatorService;
     private final EmailService emailService;
+    private final IEmailSender sender;
     private final AppUserService appUserService;
     private final ConfirmationTokenService confirmationTokenService;
 
@@ -40,7 +41,7 @@ public class RegistrationService {
                 )
         );
 
-        emailService.send(
+        sender.send(
                 request.getEmail(),
                 emailService.getEmailTemplate(
                         request.getFirstName(),

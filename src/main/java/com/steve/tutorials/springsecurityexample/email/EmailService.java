@@ -28,8 +28,8 @@ public class EmailService implements IEmailSender {
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("Hello from Steve's Secure");
-
+            helper.setFrom("hello");
+            mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Failed to send email -- ", e);
             throw new IllegalStateException("Failed to send email");
