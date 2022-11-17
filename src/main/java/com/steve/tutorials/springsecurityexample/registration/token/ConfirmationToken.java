@@ -1,5 +1,6 @@
 package com.steve.tutorials.springsecurityexample.registration.token;
 
+import com.steve.tutorials.springsecurityexample.appuser.AppUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,13 +34,17 @@ public class ConfirmationToken {
     @Column(nullable = false)
     private LocalDateTime tokenUserConfirmedAt;
 
+    @ManyToOne
+    @JoinColumn(nullable = false, name = "app_user_id")
+    private AppUser appUser;
+
     public ConfirmationToken(String token,
                              LocalDateTime tokenCreatedAt,
                              LocalDateTime tokenExpiresAt,
-                             LocalDateTime tokenUserConfirmedAt) {
+                             AppUser appUser) {
         this.token = token;
         this.tokenCreatedAt = tokenCreatedAt;
         this.tokenExpiresAt = tokenExpiresAt;
-        this.tokenUserConfirmedAt = tokenUserConfirmedAt;
+        this.appUser = appUser;
     }
 }
