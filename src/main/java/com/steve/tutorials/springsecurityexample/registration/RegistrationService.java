@@ -21,37 +21,37 @@ public class RegistrationService {
 
     private final ConfirmationTokenService confirmationTokenService;
 
-    public String register(RegistrationRequest request) throws IllegalStateException{
+    public String register(RegistrationRequest request) throws IllegalStateException {
         boolean isValidEmail = emailValidatorService.test(request.getEmail());
-        if(!isValidEmail){
+        if (!isValidEmail) {
             throw new IllegalStateException(
                     String.format("Email: [%s] is a valid email", request.getEmail())
             );
         }
         return appUserService.signupUser(
                 new AppUser(
-                     request.getFirstName(),
-                     request.getLastName(),
-                     request.getEmail(),
-                     request.getPassword(),
-                     AppUserRole.USER
+                        request.getFirstName(),
+                        request.getLastName(),
+                        request.getEmail(),
+                        request.getPassword(),
+                        AppUserRole.USER
                 )
         );
     }
 
     @Transactional
-    public String confirmToken(String token) throws IllegalStateException{
+    public String confirmToken(String token) throws IllegalStateException {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new IllegalStateException("token not found"));
-        if (confirmationToken.getTokenUserConfirmedAt() != null){
+        if (confirmationToken.getTokenUserConfirmedAt() != null) {
             throw new IllegalStateException("email already confirmed!");
         }
 
         LocalDateTime expiredAt = confirmationToken.getTokenExpiresAt();
 
-        if(expiredAt.isBefore(LocalDateTime.now())){
+        if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("Token has expired");
         }
         confirmationTokenService.setConfirmedAt(token);
