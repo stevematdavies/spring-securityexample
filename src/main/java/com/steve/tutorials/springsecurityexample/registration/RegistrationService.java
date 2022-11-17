@@ -3,6 +3,8 @@ package com.steve.tutorials.springsecurityexample.registration;
 import com.steve.tutorials.springsecurityexample.appuser.AppUser;
 import com.steve.tutorials.springsecurityexample.appuser.AppUserRole;
 import com.steve.tutorials.springsecurityexample.appuser.AppUserService;
+import com.steve.tutorials.springsecurityexample.email.EmailService;
+import com.steve.tutorials.springsecurityexample.email.IEmailSender;
 import com.steve.tutorials.springsecurityexample.registration.token.ConfirmationToken;
 import com.steve.tutorials.springsecurityexample.registration.token.ConfirmationTokenService;
 import com.steve.tutorials.springsecurityexample.utils.validators.EmailValidatorService;
@@ -17,8 +19,8 @@ import java.time.LocalDateTime;
 public class RegistrationService {
 
     private final EmailValidatorService emailValidatorService;
+    private final EmailService emailService;
     private final AppUserService appUserService;
-
     private final ConfirmationTokenService confirmationTokenService;
 
     public String register(RegistrationRequest request) throws IllegalStateException {
@@ -28,7 +30,7 @@ public class RegistrationService {
                     String.format("Email: [%s] is a valid email", request.getEmail())
             );
         }
-        return appUserService.signupUser(
+        String token = appUserService.signupUser(
                 new AppUser(
                         request.getFirstName(),
                         request.getLastName(),
@@ -37,6 +39,14 @@ public class RegistrationService {
                         AppUserRole.USER
                 )
         );
+
+        emailService.send(
+                request.getEmail(),
+                emailService.getEmailTemplate(
+                        request.getFirstName(),
+                        "http://localhost:8080/api/v1/registration/confirm?token=" + token));
+
+        return token;
     }
 
     @Transactional
